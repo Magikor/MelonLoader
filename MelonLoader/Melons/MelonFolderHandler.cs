@@ -24,8 +24,9 @@ public static class MelonFolderHandler
         new(eNameExclusionType.STARTS_WITH, "~"),
         new(eNameExclusionType.STARTS_WITH, "."),
 
-        new(eNameExclusionType.EXACT_MATCH, "Disabled"),
         new(eNameExclusionType.EXACT_MATCH, "Broken"),
+        new(eNameExclusionType.EXACT_MATCH, "Retired"),
+        new(eNameExclusionType.EXACT_MATCH, "Disabled"),
     ];
 
     internal enum ScanType
