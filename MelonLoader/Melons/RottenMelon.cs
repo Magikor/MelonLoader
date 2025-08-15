@@ -20,6 +20,13 @@ namespace MelonLoader
             this.exception = exception.ToString();
         }
 
+        public RottenMelon(Assembly assembly, string errorMessage, string exception = null)
+        {
+            this.assembly = assembly;
+            this.errorMessage = errorMessage;
+            this.exception = exception;
+        }
+
         public RottenMelon(Type type, string errorMessage, Exception exception = null)
         {
             assembly = type.Assembly;
