@@ -224,7 +224,7 @@ namespace MelonLoader
             catch (Exception ex)
             {
                 if (rotten)
-                    rottenMelons.Add(new RottenMelon(this, $"Failed to Pull Attribute '{typeof(T).Name}' from the Melon.", ex));
+                    rottenMelons.Add(new RottenMelon(Assembly, $"Failed to Pull Attribute '{typeof(T).Name}' from the Melon.", ex));
                 else
                 {
                     MelonLogger.Error($"Failed to Pull Attribute '{typeof(T).Name}' from the Melon.");
@@ -245,7 +245,7 @@ namespace MelonLoader
             catch (Exception ex)
             {
                 if (rotten)
-                    rottenMelons.Add(new RottenMelon(this, $"Failed to Pull Attribute '{typeof(T).Name}' from the Melon.", ex));
+                    rottenMelons.Add(new RottenMelon(Assembly, $"Failed to Pull Attribute '{typeof(T).Name}' from the Melon.", ex));
                 else
                 {
                     MelonLogger.Error($"Failed to Pull Attribute '{typeof(T).Name}' from the Melon.");
@@ -359,7 +359,7 @@ namespace MelonLoader
                     if (r.type != null)
                         MelonLogger.Error($"Failed to load Melon '{r.type.FullName}': {r.errorMessage}");
                     else if (r.assembly != null)
-                        MelonLogger.Error($"Failed to load Melon '{r.assembly.Assembly.GetName().Name}': {r.errorMessage}");
+                        MelonLogger.Error($"Failed to load Melon '{r.assembly.GetName().Name}': {r.errorMessage}");
                     if (!string.IsNullOrEmpty(r.exception))
                         MelonLogger.Error(r.exception);
                 }

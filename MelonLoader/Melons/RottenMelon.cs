@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Reflection;
 
 namespace MelonLoader
 {
@@ -7,12 +8,12 @@ namespace MelonLoader
     /// </summary>
     public sealed class RottenMelon
     {
-        public readonly MelonAssembly assembly;
+        public readonly Assembly assembly;
         public readonly Type type;
         public readonly string errorMessage;
         public readonly string exception;
 
-        public RottenMelon(MelonAssembly assembly, string errorMessage, Exception exception = null)
+        public RottenMelon(Assembly assembly, string errorMessage, Exception exception = null)
         {
             this.assembly = assembly;
             this.errorMessage = errorMessage;
@@ -21,7 +22,7 @@ namespace MelonLoader
 
         public RottenMelon(Type type, string errorMessage, Exception exception = null)
         {
-            assembly = MelonAssembly.LoadMelonAssembly(null, type.Assembly);
+            assembly = type.Assembly;
             this.type = type;
             this.errorMessage = errorMessage;
             this.exception = exception.ToString();
@@ -29,7 +30,7 @@ namespace MelonLoader
 
         public RottenMelon(Type type, string errorMessage, string exception = null)
         {
-            assembly = MelonAssembly.LoadMelonAssembly(null, type.Assembly);
+            assembly = type.Assembly;
             this.type = type;
             this.errorMessage = errorMessage;
             this.exception = exception;
