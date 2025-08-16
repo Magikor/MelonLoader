@@ -59,9 +59,14 @@
 14. Reimplemented "manifest.json" Requirement for Recursive Melon Subfolder scanning
 15. Implemented Config Options for Subfolder Loading Customization
 16. Exposed "MelonFolderHandler" methods for Custom Melon Folder Exclusion
-17. Fixed an issue with empty strings in "PATH" Environment Variable causing crashes     (Credits to [Squaduck](https://github.com/Squaduck) :D)
+17. Fixed an issue with empty strings in "PATH" Environment Variable causing crashes   (Credits to [Squaduck](https://github.com/Squaduck) :D)
 18. Fixed an issue with exposed Melon Folder Exclusion API not working correctly for Plugins
 19. Fixed an issue with Melon Subfolder Parent Context checks using an incorrect ScanType
+20. Implemented MelonInfoAttribute.SystemType Validation to prevent infinite loop during Melon Instantiation
+21. Fixed an issue with Infinite Loops from RottenMelon Instantiation calling MelonAssembly.LoadMelonAssembly
+22. Updated Cpp2IL to 2022.1.0-pre-release.20
+23. Implemented Il2CppInterop GetFieldDefaultValue Fix
+24. Allowed exclamation marks in namespaces/types   (Credits to [Emik03](<https://github.com/Emik03>) :D)
 
 ---
 

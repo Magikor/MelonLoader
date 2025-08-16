@@ -22,8 +22,10 @@
 * Fixed an issue with Infinite Loops from RottenMelon Instantiation calling MelonAssembly.LoadMelonAssembly
 * Updated Cpp2IL to 2022.1.0-pre-release.20
 * Implemented Il2CppInterop GetFieldDefaultValue Fix
+* Allowed exclamation marks in namespaces/types
 
 ## New Contributors
 * [Squaduck](<https://github.com/Squaduck>) made their first contribution in [#970](<https://github.com/LavaGang/MelonLoader/pull/970>)
+* [Emik03](<https://github.com/Emik03>) made their first contribution in [#983](<https://github.com/LavaGang/MelonLoader/pull/983>)
 
 **Full Changelog**: [CHANGELOG.md](<https://github.com/LavaGang/MelonLoader/blob/master/CHANGELOG.md>) | [v0.7.1...v0.7.2](<https://github.com/LavaGang/MelonLoader/compare/v0.7.1...v0.7.2>)
