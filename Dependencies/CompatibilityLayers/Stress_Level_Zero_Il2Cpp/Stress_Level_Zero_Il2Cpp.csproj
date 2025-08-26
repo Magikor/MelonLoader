@@ -4,9 +4,7 @@
         <RootNamespace>MelonLoader.CompatibilityLayers</RootNamespace>
         <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
         <OutputPath>$(MLOutDir)/MelonLoader/Dependencies/CompatibilityLayers</OutputPath>
-        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
         <DebugType>None</DebugType>
-        <CETCompat>false</CETCompat>
     </PropertyGroup>
 
     <ItemGroup>

@@ -5,10 +5,8 @@
         <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
         <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
         <OutputPath>$(MLOutDir)/MelonLoader/Dependencies/Il2CppAssemblyGenerator</OutputPath>
-        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
         <DebugType>embedded</DebugType>
         <PreserveCompilationContext>false</PreserveCompilationContext>
-        <CETCompat>false</CETCompat>
     </PropertyGroup>
     <ItemGroup>
         <ProjectReference Include="..\..\MelonLoader\MelonLoader.csproj" Private="false" />

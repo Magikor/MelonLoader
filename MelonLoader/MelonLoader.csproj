@@ -5,18 +5,9 @@
         <OutputPath>$(MLOutDir)/MelonLoader</OutputPath>
         <AppendTargetFrameworkToOutputPath>true</AppendTargetFrameworkToOutputPath>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
-        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
         <EnableDynamicLoading>true</EnableDynamicLoading>
         <DebugType>portable</DebugType>
         <IsPackable>true</IsPackable>
-        <PackageId>LavaGang.MelonLoader</PackageId>
-        <PackageTags>modding unity</PackageTags>
-        <RepositoryUrl>https://github.com/LavaGang/MelonLoader</RepositoryUrl>
-        <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
-        <RepositoryType>git</RepositoryType>
-        <PackageProjectUrl>https://github.com/LavaGang/MelonLoader</PackageProjectUrl>
-        <Description>The World's First Universal Mod Loader for Unity Games compatible with both Il2Cpp and Mono.</Description>
-        <CETCompat>false</CETCompat>
     </PropertyGroup>
     <ItemDefinitionGroup>
         <PackageReference>

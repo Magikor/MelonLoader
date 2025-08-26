@@ -4,11 +4,9 @@
         <RootNamespace>MelonLoader.Support</RootNamespace>
         <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
         <OutputPath>$(MLOutDir)/MelonLoader/Dependencies/SupportModules</OutputPath>
-        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
         <DebugType>embedded</DebugType>
         <DefineConstants>SM_Il2Cpp</DefineConstants>
         <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
-        <CETCompat>false</CETCompat>
     </PropertyGroup>
     <ItemGroup>
         <Reference Include="Il2Cppmscorlib">

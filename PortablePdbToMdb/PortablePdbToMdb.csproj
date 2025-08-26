@@ -7,7 +7,6 @@
         <PlatformTarget>AnyCpu</PlatformTarget>
         <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
         <OutputPath>$(MSBuildProjectDirectory)/bin</OutputPath>
-        <CETCompat>false</CETCompat>
     </PropertyGroup>
 
     <ItemGroup>
