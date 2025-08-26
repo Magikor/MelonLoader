@@ -28,6 +28,7 @@
 * Updated AssetRipper.Primitives to 3.2.0
 * Updated Il2CppInterop to 1.5.0-ci.643
 * Fixed an issue with Melon Subfolder toggle being inverted
+* Fixed an issue with Il2CppAssemblyGenerator and File Detection Failures
 
 ## New Contributors
 * [Squaduck](<https://github.com/Squaduck>) made their first contribution in [#970](<https://github.com/LavaGang/MelonLoader/pull/970>)
