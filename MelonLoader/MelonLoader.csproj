@@ -8,6 +8,10 @@
         <EnableDynamicLoading>true</EnableDynamicLoading>
         <DebugType>portable</DebugType>
         <IsPackable>true</IsPackable>
+        <PackageId>LavaGang.MelonLoader</PackageId>
+        <PackageTags>modding unity</PackageTags>
+        <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+        <PackageProjectUrl>$(RepositoryUrl)</PackageProjectUrl>
     </PropertyGroup>
     <ItemDefinitionGroup>
         <PackageReference>
