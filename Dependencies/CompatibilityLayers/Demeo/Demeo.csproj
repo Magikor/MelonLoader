@@ -10,6 +10,6 @@
     </PropertyGroup>
     <ItemGroup>
         <ProjectReference Include="..\..\..\MelonLoader\MelonLoader.csproj" Private="false" />
-        <PackageReference Include="HarmonyX" Version="2.10.2" ExcludeAssets="Runtime" />
+        <PackageReference Include="HarmonyX" Version="$(HarmonyXVersion)" ExcludeAssets="Runtime" />
     </ItemGroup>
 </Project>
