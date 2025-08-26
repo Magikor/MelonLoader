@@ -6,14 +6,14 @@
         <Version>0.7.2</Version>
         <AppHostVersion>9.0.0</AppHostVersion>
 		
-		<BootstrapTarget>net9</BootstrapTarget>
+        <BootstrapTarget>net9</BootstrapTarget>
 		
         <DotNetTarget>net6</DotNetTarget>
 		
         <MonoTarget>net35</MonoTarget>
         <MonoBleedingEdgeTarget>net472</MonoBleedingEdgeTarget>
 		
-		<PortablePdbToMdbTarget>netstandard2.0</PortablePdbToMdbTarget>
+        <PortablePdbToMdbTarget>netstandard2.0</PortablePdbToMdbTarget>
 
         <Authors>Lava Gang</Authors>
         <Company>discord.gg/2Wn3N2P</Company>
@@ -25,7 +25,7 @@
         <Platforms>x86;x64</Platforms>
         <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
         <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
-		<SuppressTfmSupportBuildWarnings>true</SuppressTfmSupportBuildWarnings>
+        <SuppressTfmSupportBuildWarnings>true</SuppressTfmSupportBuildWarnings>
     </PropertyGroup>
 	
 	<!--
