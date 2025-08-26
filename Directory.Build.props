@@ -55,9 +55,9 @@
 	</PropertyGroup>
 	
 	<!--
-		Net Framework Overrides
+		Mono Overrides
 	-->
-    <PropertyGroup Condition="'$(TargetFramework)' == 'net35'">
+    <PropertyGroup Condition="'$(TargetFramework)' == '$(MonoTarget)' Or '$(TargetFramework)' == '$(MonoBleedingEdgeTarget)'">
         <MonoCecilVersion>0.10.4</MonoCecilVersion>
     </PropertyGroup>
 
@@ -95,14 +95,14 @@
         <MLOutDir>$(SolutionDir)/Output/$(Configuration)/$(RuntimeIdentifier)</MLOutDir>
     </PropertyGroup>
 
-    <ItemGroup Condition="'$(TargetFramework)' == 'net35'">
+    <ItemGroup Condition="'$(TargetFramework)' == '$(MonoTarget)' Or '$(TargetFramework)' == '$(MonoBleedingEdgeTarget)'">
         <ProjectReference Include="$(SolutionDir)/PortablePdbToMdb/PortablePdbToMdb.csproj"
                           ReferenceOutputAssembly="false"
                           SkipGetTargetFrameworkProperties="true"
                           GlobalPropertiesToRemove="TargetFramework" />
     </ItemGroup>
     <UsingTask TaskName="PortablePdbToMdb"
-               Condition="'$(TargetFramework)' == 'net35'"
+               Condition="'$(TargetFramework)' == '$(MonoTarget)' Or '$(TargetFramework)' == '$(MonoBleedingEdgeTarget)'"
                AssemblyFile="$(SolutionDir)/PortablePdbToMdb/bin/PortablePdbToMdb.dll"
                TaskFactory="TaskHostFactory" />
     <Target Name="SymbolsConvert" Condition="'$(TargetFramework)' == 'net35'" AfterTargets="AfterBuild">
