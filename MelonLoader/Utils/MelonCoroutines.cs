@@ -1,10 +1,22 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 
 namespace MelonLoader
 {
     public class MelonCoroutines
     {
+        private static List<IEnumerator> _queue = new List<IEnumerator>();
+
+        internal static void ProcessQueue()
+        {
+            if (_queue.Count <= 0)
+                return;
+            foreach (var queuedCoroutine in _queue)
+                Start(queuedCoroutine);
+            _queue.Clear();
+        }
+
         /// <summary>
         /// Start a new coroutine.<br />
         /// Coroutines are called at the end of the game Update loops.
@@ -14,7 +26,11 @@ namespace MelonLoader
         public static object Start(IEnumerator routine)
         {
             if (SupportModule.Interface == null)
-                throw new NotSupportedException("Support module must be initialized before starting coroutines");
+            {
+                _queue.Add(routine);
+                return routine;
+            }
+
             return SupportModule.Interface.StartCoroutine(routine);
         }
 
@@ -25,7 +41,11 @@ namespace MelonLoader
         public static void Stop(object coroutineToken)
         {
             if (SupportModule.Interface == null)
-                throw new NotSupportedException("Support module must be initialized before starting coroutines");
+            {
+                _queue.Remove(coroutineToken as IEnumerator);
+                return;
+            }
+
             SupportModule.Interface.StopCoroutine(coroutineToken);
         }
     }

@@ -74,6 +74,7 @@
 29. Fixed an issue with Melon Subfolder toggle being inverted
 30. Fixed an issue with Il2CppAssemblyGenerator and File Detection Failures
 31. Fixed an issue with Assembly Verifier throwing an error when loading SharpDX
+32. Fixed an issue with MelonCoroutines attempting to use the Support Module before it is loaded
 
 ---
 

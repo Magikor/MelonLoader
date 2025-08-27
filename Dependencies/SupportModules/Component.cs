@@ -49,13 +49,7 @@ namespace MelonLoader.Support
             if ((Main.component == null) || (Main.component != this))
                 return;
 
-            foreach (var queuedCoroutine in SupportModule_To.QueuedCoroutines)
-#if SM_Il2Cpp
-                StartCoroutine(new Il2CppSystem.Collections.IEnumerator(new MonoEnumeratorWrapper(queuedCoroutine).Pointer));
-#else
-                StartCoroutine(queuedCoroutine);
-#endif
-            SupportModule_To.QueuedCoroutines.Clear();
+            MelonCoroutines.ProcessQueue();
         }
 
         void Update()
