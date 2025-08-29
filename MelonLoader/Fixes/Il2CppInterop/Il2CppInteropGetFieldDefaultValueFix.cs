@@ -1,24 +1,18 @@
 ﻿#if NET6_0_OR_GREATER
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Reflection.Emit;
 using HarmonyLib;
-using Il2CppInterop.Common.XrefScans;
 using Il2CppInterop.Runtime.Injection;
 
 namespace MelonLoader.Fixes.Il2CppInterop
 {
-    // fixes: https://github.com/BepInEx/Il2CppInterop/pull/90
+    // Herp: This just allows custom signatures to be added to Il2CppInterop's Class::GetFieldDefaultValue Hook
     internal class Il2CppInteropGetFieldDefaultValueFix
     {
         private static MelonLogger.Instance _logger = new("Il2CppInterop");
-
-        private static MethodInfo _jumpTargets;
-        private static MethodInfo _getStaticFieldValue_Fixed;
-        private static MethodInfo _findClassGetFieldDefaultValueXref;
-        private static MethodInfo _findClassGetFieldDefaultValueXref_Transpiler;
 
         private static FieldInfo _s_Signatures;
 
@@ -35,13 +29,6 @@ namespace MelonLoader.Fixes.Il2CppInterop
         private static Array _replacementSignatures;
         private static List<LemonTuple<string, string, int, bool>> _signaturesToAdd = new List<LemonTuple<string, string, int, bool>>
         {
-            // Idle Slayer - Unity 2021.3.23 (x64)
-            new(
-                "\x40\x53\x48\x83\xEC\x20\x48\x8B\xDA\xE8\xCC\xCC\xCC\xCC\x4C",
-                "xxxxxxxxxx????x",
-                0,
-                false
-            )
         };
 
         private static void LogMsg(string msg)
@@ -62,9 +49,7 @@ namespace MelonLoader.Fixes.Il2CppInterop
             try
             {
                 Type thisType = typeof(Il2CppInteropGetFieldDefaultValueFix);
-
                 Type classInjectorType = typeof(ClassInjector);
-                Type xrefType = typeof(XrefScannerLowLevel);
 
                 Type hookType = classInjectorType.Assembly.GetType("Il2CppInterop.Runtime.Injection.Hooks.Class_GetFieldDefaultValue_Hook");
                 if (hookType == null)
@@ -73,6 +58,14 @@ namespace MelonLoader.Fixes.Il2CppInterop
                 Type memoryUtilsType = classInjectorType.Assembly.GetType("Il2CppInterop.Runtime.MemoryUtils");
                 if (memoryUtilsType == null)
                     throw new Exception("Failed to get MemoryUtils");
+
+                _findTargetMethod = hookType.GetMethod("FindTargetMethod", BindingFlags.Public | BindingFlags.Instance);
+                if (_findTargetMethod == null)
+                    throw new Exception("Failed to get Class_GetFieldDefaultValue_Hook.FindTargetMethod");
+
+                _s_Signatures = hookType.GetField("s_Signatures", BindingFlags.NonPublic | BindingFlags.Static);
+                if (_s_Signatures == null)
+                    throw new Exception("Failed to get Class_GetFieldDefaultValue_Hook.s_Signatures");
 
                 _signatureDefinition = memoryUtilsType.GetNestedType("SignatureDefinition", BindingFlags.Public | BindingFlags.Instance);
                 if (_signatureDefinition == null)
@@ -94,38 +87,13 @@ namespace MelonLoader.Fixes.Il2CppInterop
                 if (_signatureDefinition_xref == null)
                     throw new Exception("Failed to get SignatureDefinition.xref");
 
-                _findTargetMethod = hookType.GetMethod("FindTargetMethod", BindingFlags.Public | BindingFlags.Instance);
-                if (_findTargetMethod == null)
-                    throw new Exception("Failed to get Class_GetFieldDefaultValue_Hook.FindTargetMethod");
-
-                _findClassGetFieldDefaultValueXref = hookType.GetMethod("FindClassGetFieldDefaultValueXref", BindingFlags.NonPublic | BindingFlags.Static);
-                if (_findClassGetFieldDefaultValueXref == null)
-                    throw new Exception("Failed to get Class_GetFieldDefaultValue_Hook.FindClassGetFieldDefaultValueXref");
-
-                _s_Signatures = hookType.GetField("s_Signatures", BindingFlags.NonPublic | BindingFlags.Static);
-                if (_s_Signatures == null)
-                    throw new Exception("Failed to get Class_GetFieldDefaultValue_Hook.s_Signatures");
-
-                _jumpTargets = xrefType.GetMethod("JumpTargets", BindingFlags.Public | BindingFlags.Static);
-                if (_jumpTargets == null)
-                    throw new Exception("Failed to get XrefScannerLowLevel.JumpTargets");
-
-                _getStaticFieldValue_Fixed = thisType.GetMethod(nameof(JumpTargets_getStaticFieldValue_Fixed), BindingFlags.NonPublic | BindingFlags.Static);
-                _findClassGetFieldDefaultValueXref_Transpiler = thisType.GetMethod(nameof(FindClassGetFieldDefaultValueXref_Transpiler), BindingFlags.NonPublic | BindingFlags.Static);
-
                 _replacementSigArray = thisType.GetField("_replacementSignatures", BindingFlags.NonPublic | BindingFlags.Static);
                 _findTargetMethod_Transpiler = thisType.GetMethod(nameof(FindTargetMethod_Transpiler), BindingFlags.NonPublic | BindingFlags.Static);
 
-                LogDebugMsg("Getting Signatures...");
+                LogDebugMsg("Getting Class_GetFieldDefaultValue_Hook Signatures...");
                 GetSignatures();
 
-                LogDebugMsg("Patching Il2CppInterop Class_GetFieldDefaultValue_Hook.FindClassGetFieldDefaultValueXref...");
-                Core.HarmonyInstance.Patch(_findClassGetFieldDefaultValueXref,
-                    null,
-                    null,
-                    new HarmonyMethod(_findClassGetFieldDefaultValueXref_Transpiler));
-
-                LogDebugMsg("Patching Il2CppInterop Class_GetFieldDefaultValue_Hook.FindTargetMethod...");
+                LogDebugMsg("Patching Class_GetFieldDefaultValue_Hook.FindTargetMethod...");
                 Core.HarmonyInstance.Patch(_findTargetMethod,
                     null,
                     null,
@@ -135,22 +103,6 @@ namespace MelonLoader.Fixes.Il2CppInterop
             {
                 LogError(e);
             }
-        }
-        private static IEnumerable<IntPtr> JumpTargets_getStaticFieldValue_Fixed(IntPtr codeStart, bool ignoreRetn, out bool _ret)
-        {
-            _ret = false;
-            var getStaticFieldValueTargets = XrefScannerLowLevel.JumpTargets(codeStart, ignoreRetn).ToList();
-
-            // Sometimes the compiler can do an optimization and omit 'retn' instruction,
-            // which then causes code following to grab wrong function pointer. A correct match should not contain more than 4 jumps
-            // This optimization also causes Field::StaticGetValueInternal method to be located right under Field::StaticGetValue method
-            if (getStaticFieldValueTargets.Count() > 4)
-            {
-                _ret = true;
-                return [getStaticFieldValueTargets[^2]];
-            }
-
-            return getStaticFieldValueTargets;
         }
 
         private static IEnumerable<CodeInstruction> FindTargetMethod_Transpiler(IEnumerable<CodeInstruction> instructions)
@@ -165,85 +117,10 @@ namespace MelonLoader.Fixes.Il2CppInterop
                 {
                     found = true;
                     instruction.operand = _replacementSigArray;
-                    LogDebugMsg("Patched Il2CppInterop Class_GetFieldDefaultValue_Hook._s_Signatures");
+                    LogDebugMsg("Patched Class_GetFieldDefaultValue_Hook._s_Signatures");
                 }
 
                 yield return instruction;
-            }
-        }
-
-        private static IEnumerable<CodeInstruction> FindClassGetFieldDefaultValueXref_Transpiler(
-            MethodBase __originalMethod, 
-            IEnumerable<CodeInstruction> instructions, 
-            ILGenerator generator)
-        {
-            int startIndex = 0;
-            int endIndex = 0;
-
-            bool found = false;
-            for (int i = 0; i < instructions.Count(); i++)
-            {
-                CodeInstruction instruction = instructions.ElementAt(i);
-                if (!found
-                    && instruction.ToString().Contains("Field::StaticGetValueInternal:"))
-                {
-                    endIndex = i - 2;
-
-                    for (int j = i; j > 0; j--)
-                    {
-                        CodeInstruction newInst = instructions.ElementAt(j);
-                        if (newInst.Calls(_jumpTargets))
-                        {
-                            found = true;
-                            startIndex = j;
-                            break;
-                        }
-                    }
-
-                    break;
-                }
-            }
-
-            Label endIndexLabel = generator.DefineLabel();
-            for (int i = 0; i < instructions.Count(); i++)
-            {
-                CodeInstruction code = instructions.ElementAt(i);
-                if (found && (i == startIndex))
-                {
-                    // Define _ret Local
-                    int shouldReturnLocalIndex = generator.DeclareLocal(typeof(bool)).LocalIndex;
-
-                    // JumpTargets_getStaticFieldValue_Fixed
-                    yield return new(OpCodes.Ldloca_S, shouldReturnLocalIndex);
-                    yield return new(OpCodes.Call, _getStaticFieldValue_Fixed);
-
-                    // .Last()
-                    yield return instructions.ElementAt(startIndex + 1);
-
-                    // getStaticFieldValueInternal =
-                    yield return instructions.ElementAt(startIndex + 2);
-
-                    // if (_ret)
-                    yield return new CodeInstruction(OpCodes.Ldloc_S, (byte)shouldReturnLocalIndex);
-                    yield return new CodeInstruction(OpCodes.Brfalse_S, endIndexLabel);
-
-                    // return getStaticFieldValueInternal
-                    yield return new CodeInstruction(OpCodes.Ldloc_S, (byte)shouldReturnLocalIndex);
-                    yield return new CodeInstruction(OpCodes.Ret);
-
-                    // Skip to End Index of Target
-                    i = endIndex;
-                    LogDebugMsg("Patched Il2CppInterop XrefScannerLowLevel.JumpTargets(getStaticFieldValue)");
-                }
-                else
-                {
-                    // Apply Label to End Index
-                    if (found && (i == (endIndex + 1)))
-                        code.labels.Add(endIndexLabel);
-
-                    // Add Old Instruction as-is
-                    yield return code;
-                }
             }
         }
 
@@ -303,4 +180,5 @@ namespace MelonLoader.Fixes.Il2CppInterop
         }
     }
 }
+
 #endif

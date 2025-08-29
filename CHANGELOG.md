@@ -65,12 +65,12 @@
 20. Implemented MelonInfoAttribute.SystemType Validation to prevent infinite loop during Melon Instantiation
 21. Fixed an issue with Infinite Loops from RottenMelon Instantiation calling MelonAssembly.LoadMelonAssembly
 22. Updated Cpp2IL to 2022.1.0-pre-release.20
-23. Implemented Il2CppInterop GetFieldDefaultValue Fix
+23. Implemented Il2CppInterop GetFieldDefaultValue Fix to allow custom signatures to be added to Il2CppInterop's Class::GetFieldDefaultValue Hook
 24. Allowed exclamation marks in namespaces/types   (Credits to [Emik03](<https://github.com/Emik03>) :D)
 25. Updated Tomlet to 6.1.0
 26. Updated Pastel to 7.0.0
 27. Updated AssetRipper.Primitives to 3.2.0
-28. Updated Il2CppInterop to 1.5.0-ci.643
+28. Updated Il2CppInterop to 1.5.0-ci.644
 29. Fixed an issue with Melon Subfolder toggle being inverted
 30. Fixed an issue with Il2CppAssemblyGenerator and File Detection Failures
 31. Fixed an issue with Assembly Verifier throwing an error when loading SharpDX
