@@ -26,7 +26,7 @@
 * Updated Tomlet to 6.1.0
 * Updated Pastel to 7.0.0
 * Updated AssetRipper.Primitives to 3.2.0
-* Updated Il2CppInterop to 1.5.0-ci.644
+* Updated Il2CppInterop to 1.5.1
 * Fixed an issue with Melon Subfolder toggle being inverted
 * Fixed an issue with Il2CppAssemblyGenerator and File Detection Failures
 * Fixed an issue with Assembly Verifier throwing an error when loading SharpDX
