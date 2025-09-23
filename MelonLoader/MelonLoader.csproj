@@ -39,13 +39,13 @@
         <PackageReference Include="AsmResolver.DotNet" Version="$(AsmResolverVersion)" />
 		
         <PackageReference Include="bHapticsLib" Version="1.0.6" />
-        <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+        <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
     </ItemGroup>
     <ItemGroup Condition="'$(TargetFramework)' == '$(DotNetTarget)'">
         <PackageReference Include="Microsoft.Diagnostics.Runtime" Version="3.1.512801" />
-        <PackageReference Include="System.Configuration.ConfigurationManager" Version="9.0.8" />
+        <PackageReference Include="System.Configuration.ConfigurationManager" Version="9.0.9" />
         <PackageReference Include="System.Runtime.InteropServices.RuntimeInformation" Version="4.3.0" />
-        <PackageReference Include="System.Security.Permissions" Version="9.0.8" />
+        <PackageReference Include="System.Security.Permissions" Version="9.0.9" />
 		
         <PackageReference Include="Iced" Version="$(IcedVersion)" />
         <PackageReference Include="Il2CppInterop.Common" Version="$(Il2CppInteropVersion)" />

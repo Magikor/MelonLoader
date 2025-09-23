@@ -146,7 +146,8 @@ namespace MelonLoader
 #endif
 
             Fixes.Il2CppInterop.Il2CppInteropFixes.Install();
-            Fixes.Il2CppInterop.Il2CppInteropGetFieldDefaultValueFix.Install();
+            //Fixes.Il2CppInterop.Il2CppInteropGetFieldDefaultValueFix.Install();
+            Fixes.Il2CppInterop.Il2CppInteropGenericMethodGetMethodFix.Install();
 
             Fixes.Il2CppInterop.Il2CppICallInjector.Install();
 
