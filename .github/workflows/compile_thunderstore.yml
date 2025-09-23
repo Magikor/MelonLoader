@@ -11,8 +11,8 @@ on:
         type: string
   
 jobs:
-  upload_nuget:
-    name: Upload NuGet Package
+  compile_thunderstore:
+    name: Create Thunderstore Package
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
@@ -44,14 +44,9 @@ jobs:
         run: |
           cd compiled_release/thunderstore
           zip -r ../${{ github.repository_owner }}-${{ env.PACKAGE_NAME }}-${{ inputs.VERSION }}.zip ./
-          
-      - name: Upload to Thunderstore
-        uses: GreenTF/upload-thunderstore-package@v4.3
+
+      - name: Upload Thunderstore Artifact
+        uses: actions/upload-artifact@v4
         with:
-          community: ${{ vars.THUNDERSTORE_COMMUNITY }}
-          namespace: ${{ github.repository_owner }}
-          name: ${{ env.PACKAGE_NAME }}
-          version: ${{ inputs.VERSION }}
-          description: ${{ env.PACKAGE_DESC }}
-          token: ${{ secrets.THUNDERSTORE_API_KEY }}
-          file: ${{ github.repository_owner }}-${{ env.PACKAGE_NAME }}-${{ inputs.VERSION }}.zip
+          name: MelonLoader.Thunderstore
+          path: compiled_release/${{ github.repository_owner }}-${{ env.PACKAGE_NAME }}-${{ inputs.VERSION }}.zip

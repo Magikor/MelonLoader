@@ -35,3 +35,10 @@ jobs:
     uses: ./.github/workflows/compile_nuget.yml
     with:
       VERSION: ${{ inputs.VERSION }}
+      
+  compile_thunderstore:
+    name: Thunderstore
+    uses: ./.github/workflows/compile_thunderstore.yml
+    needs: [ compile_windows ]
+    with:
+      VERSION: ${{ inputs.VERSION }}
