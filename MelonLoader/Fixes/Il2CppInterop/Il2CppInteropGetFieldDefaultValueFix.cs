@@ -31,6 +31,9 @@ namespace MelonLoader.Fixes.Il2CppInterop
 
         internal static void Install()
         {
+            if (_signaturesToAdd.Count <= 0)
+                return;
+
             try
             {
                 Type thisType = typeof(Il2CppInteropGetFieldDefaultValueFix);

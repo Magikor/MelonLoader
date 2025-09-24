@@ -76,7 +76,8 @@
 31. Fixed an issue with Assembly Verifier throwing an error when loading SharpDX
 32. Fixed an issue with MelonCoroutines attempting to use the Support Module before it is loaded
 33. Fixed an issue with MelonCoroutines started from OnApplicationStart running before other MelonCoroutines in the queue
-34. Implemented Runtime Fix for Il2CppInterop's GenericMethod::GetMethod Hook causing crashes on some Unity Versions
+34. Fixed an issue with Il2CppInterop's GenericMethod::GetMethod Hook causing crashes on some Unity Versions
+35. Fixed an issue with Il2CppInterop's MethodRewriteContext.UnmangleMethodNameWithSignature and it's usage of AsmResolver's Utf8String causing crashes on some Unity Versions
 
 ---
 

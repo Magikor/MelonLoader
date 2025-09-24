@@ -138,6 +138,9 @@ namespace MelonLoader
 #endif
 
 #if NET6_0_OR_GREATER
+
+            Fixes.AsmResolver.AsmResolverUtf8StringConcatFix.Install();
+
             Fixes.Il2CppInterop.Il2CppInteropExceptionLog.Install();
 
 #if OSX
@@ -146,7 +149,7 @@ namespace MelonLoader
 #endif
 
             Fixes.Il2CppInterop.Il2CppInteropFixes.Install();
-            //Fixes.Il2CppInterop.Il2CppInteropGetFieldDefaultValueFix.Install();
+            Fixes.Il2CppInterop.Il2CppInteropGetFieldDefaultValueFix.Install();
             Fixes.Il2CppInterop.Il2CppInteropGenericMethodGetMethodFix.Install();
 
             Fixes.Il2CppInterop.Il2CppICallInjector.Install();
