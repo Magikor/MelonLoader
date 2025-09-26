@@ -19,5 +19,6 @@
     <ItemGroup>
         <ProjectReference Include="..\..\..\MelonLoader\MelonLoader.csproj" Private="false" />
         <PackageReference Include="Samboy063.Tomlet" Version="$(TomletVersion)" ExcludeAssets="Runtime" />
+        <PackageReference Include="HarmonyX" Version="$(HarmonyXVersion)" ExcludeAssets="Runtime" />
     </ItemGroup>
 </Project>
