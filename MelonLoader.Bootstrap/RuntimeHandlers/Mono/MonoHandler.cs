@@ -109,6 +109,13 @@ internal static class MonoHandler
             newAssembliesPathSb.Append(baseOverridesDir);
             newAssembliesPathSb.Append(MonoPathSeparator);
         }
+        else if (LoaderConfig.Current.UnityEngine.MBEPatch)
+        {
+            string baseOverridesDir = Path.Combine(LoaderConfig.Current.Loader.BaseDirectory, "MelonLoader", "Dependencies", "MonoBleedingEdgePatches");
+            newAssembliesPathSb.Append(baseOverridesDir);
+            newAssembliesPathSb.Append(MonoPathSeparator);
+        }
+
         newAssembliesPathSb.Append(Mono.AssemblyGetrootdir());
 
         string newAssembliesPath = newAssembliesPathSb.ToString();

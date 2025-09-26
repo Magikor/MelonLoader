@@ -36,6 +36,7 @@
 
     <ItemGroup>
         <None Include="../BaseLibs/NetStandardPatches/*" CopyToOutputDirectory="PreserveNewest" Link="MelonLoader/Dependencies/NetStandardPatches/%(RecursiveDir)%(Filename)%(Extension)" />
+        <None Include="../BaseLibs/MonoBleedingEdgePatches/*" CopyToOutputDirectory="PreserveNewest" Link="MelonLoader/Dependencies/MonoBleedingEdgePatches/%(RecursiveDir)%(Filename)%(Extension)" />
         <None Include="$(SolutionDir)/NOTICE.txt" CopyToOutputDirectory="PreserveNewest" Link="MelonLoader/Documentation/%(Filename)%(Extension)" />
         <None Include="$(SolutionDir)/LICENSE.md" CopyToOutputDirectory="PreserveNewest" Link="MelonLoader/Documentation/%(Filename)%(Extension)" />
         <None Include="$(SolutionDir)/CHANGELOG.md" CopyToOutputDirectory="PreserveNewest" Link="MelonLoader/Documentation/%(Filename)%(Extension)" />

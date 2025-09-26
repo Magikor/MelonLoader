@@ -300,6 +300,9 @@ public class LoaderConfig
             if (ArgParser.IsDefined("melonloader.agfregenerate"))
                 Current.UnityEngine.ForceRegeneration = true;
 
+            if (ArgParser.IsDefined("melonloader.mbepatch"))
+                Current.UnityEngine.MBEPatch = true;
+
             if (ArgParser.IsDefined("melonloader.agfoffline"))
                 Current.UnityEngine.ForceOfflineGeneration = true;
 
@@ -338,6 +341,10 @@ public class LoaderConfig
         [TomlProperty("mono_search_path_override")]
         [TomlPrecedingComment($"A {MonoPathSeparatorDescription} separated list of paths that Mono will prioritise to seek mscorlib and core libraries before the Managed folder and Melon's included set of core libraries. Equivalent to the '--melonloader.monosearchpathoverride' launch option")]
         public string MonoSearchPathOverride { get; internal set; } = "";
+
+        [TomlProperty("mono_bleeding_edge_environment_patches")]
+        [TomlPrecedingComment("Forces MonoBleedingEdge to utilize included Environment Patches. Equivalent to the '--melonloader.mbepatch' launch option")]
+        public bool MBEPatch { get; internal set; }
 
         [TomlProperty("force_offline_generation")]
         [TomlPrecedingComment("Forces the Il2Cpp Assembly Generator to run without contacting the remote API. Equivalent to the '--melonloader.agfoffline' launch option")]
