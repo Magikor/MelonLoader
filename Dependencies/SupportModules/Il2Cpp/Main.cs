@@ -246,6 +246,7 @@ namespace MelonLoader.Support
                     MelonDebug.Msg(formattedTxt);
                     break;
 
+                case LogLevel.Critical:
                 case LogLevel.Error:
                     _logger.Error(formattedTxt);
                     break;
@@ -255,6 +256,7 @@ namespace MelonLoader.Support
                     break;
 
                 case LogLevel.Information:
+                case LogLevel.None:
                 default:
                     _logger.Msg(formattedTxt);
                     break;
