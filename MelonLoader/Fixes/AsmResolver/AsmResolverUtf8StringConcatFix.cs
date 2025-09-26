@@ -9,14 +9,18 @@ using Il2CppInterop.Generator.Contexts;
 
 namespace MelonLoader.Fixes.AsmResolver
 {
-    // Herp: This fixes an OOBE issue with AsmResolver and its usage inside Il2CppInterop's MethodRewriteContext.UnmangleMethodNameWithSignature
+    // Herp: This fixes an OOBE issue with AsmResolver Utf8String.Concat and its usage inside Il2CppInterop's MethodRewriteContext.UnmangleMethodNameWithSignature
     // AsmResolver does not have extended validation of UTF-8 encoded strings
     // As such it fails when it runs into a null or empty string as either parameter of Utf8String.Concat and Utf8String's Concatenate Operator
-    // This patches MethodRewriteContext.UnmangleMethodNameWithSignature and redirects it to a fixed variant with extended validation implemented
+    // This also patches MethodRewriteContext.UnmangleMethodNameWithSignature and redirects it to a fixed variant with extended validation implemented
     internal class AsmResolverUtf8StringConcatFix
     {
+        private static MethodInfo _concat;
+        private static MethodInfo _concatPrefix;
+
         private static MethodInfo _produceMethodSignatureBase;
         private static MethodInfo _parameterSignatureMatchesThis;
+        
         private static MethodInfo _unmangleMethodNameWithSignature;
         private static MethodInfo _unmangleMethodNameWithSignaturePrefix;
 
@@ -26,6 +30,11 @@ namespace MelonLoader.Fixes.AsmResolver
             {
                 Type thisType = typeof(AsmResolverUtf8StringConcatFix);
                 Type contextType = typeof(MethodRewriteContext);
+                Type utf8StringType = typeof(Utf8String);
+
+                _concat = utf8StringType.GetMethod("Concat", BindingFlags.Public | BindingFlags.Instance, [typeof(byte[])]);
+                if (_concat == null)
+                    throw new Exception("Failed to get Utf8String.Concat(byte[])");
 
                 _produceMethodSignatureBase = contextType.GetMethod("ProduceMethodSignatureBase", BindingFlags.NonPublic | BindingFlags.Instance);
                 if (_produceMethodSignatureBase == null)
@@ -39,9 +48,17 @@ namespace MelonLoader.Fixes.AsmResolver
                 if (_unmangleMethodNameWithSignature == null)
                     throw new Exception("Failed to get MethodRewriteContext.UnmangleMethodNameWithSignature");
 
+                _concatPrefix = thisType.GetMethod("ConcatPrefix", BindingFlags.NonPublic | BindingFlags.Static);
+                if (_concatPrefix == null)
+                    throw new Exception("Failed to get AsmResolverUtf8StringConcatFix.ConcatPrefix");
+
                 _unmangleMethodNameWithSignaturePrefix = thisType.GetMethod("UnmangleMethodNameWithSignaturePrefix", BindingFlags.NonPublic | BindingFlags.Static);
                 if (_unmangleMethodNameWithSignaturePrefix == null)
                     throw new Exception("Failed to get AsmResolverUtf8StringConcatFix.UnmangleMethodNameWithSignaturePrefix");
+
+                MelonDebug.Msg($"Patching AsmResolver Utf8String.Concat(byte[])...");
+                Core.HarmonyInstance.Patch(_concat,
+                    new HarmonyMethod(_concatPrefix));
 
                 MelonDebug.Msg($"Patching Il2CppInterop MethodRewriteContext.UnmangleMethodNameWithSignature...");
                 Core.HarmonyInstance.Patch(_unmangleMethodNameWithSignature,
@@ -51,6 +68,12 @@ namespace MelonLoader.Fixes.AsmResolver
             {
                 MelonLogger.Warning(e);
             }
+        }
+
+        private static bool ConcatPrefix(Utf8String __instance, byte[] __0, ref Utf8String __result)
+        {
+            __result = ConcatFixed(__instance, __0);
+            return false;
         }
 
         private static bool UnmangleMethodNameWithSignaturePrefix(MethodRewriteContext __instance, ref string __result)
@@ -87,7 +110,7 @@ namespace MelonLoader.Fixes.AsmResolver
             return false;
         }
 
-        private static string? GetNamespacePrefixFixed(ITypeDefOrRef type)
+        private static string GetNamespacePrefixFixed(ITypeDefOrRef type)
         {
             if (type.DeclaringType is not null)
                 return CombineStringsFixed($"{GetNamespacePrefixFixed(type.DeclaringType)}.", type.DeclaringType.Name);
@@ -95,7 +118,7 @@ namespace MelonLoader.Fixes.AsmResolver
             return type.Namespace;
         }
 
-        private static string CombineStringsFixed(string? a, Utf8String? b)
+        private static string CombineStringsFixed(string a, Utf8String b)
         {
             if (string.IsNullOrEmpty(a))
                 return string.Empty;
@@ -106,7 +129,7 @@ namespace MelonLoader.Fixes.AsmResolver
             return ConcatFixed(a, b);
         }
 
-        private static Utf8String CombineStringsFixed(Utf8String? a, string? b)
+        private static Utf8String CombineStringsFixed(Utf8String a, string b)
         {
             if (string.IsNullOrEmpty(b))
                 return Utf8String.Empty;
@@ -117,10 +140,10 @@ namespace MelonLoader.Fixes.AsmResolver
             return ConcatFixed(a, b);
         }
 
-        private static Utf8String ConcatFixed(Utf8String a, Utf8String? b) => !Utf8String.IsNullOrEmpty(b)
+        private static Utf8String ConcatFixed(Utf8String a, Utf8String b) => !Utf8String.IsNullOrEmpty(b)
                 ? ConcatFixed(a, b.GetBytes())
                 : a;
-        private static Utf8String ConcatFixed(Utf8String a, byte[]? b)
+        private static Utf8String ConcatFixed(Utf8String a, byte[] b)
         {
             if (b is null || b.Length == 0)
                 return a;
