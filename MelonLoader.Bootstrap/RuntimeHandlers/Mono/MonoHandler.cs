@@ -200,16 +200,35 @@ internal static class MonoHandler
             Core.Logger.Error($"Failed to load the Mono MelonLoader assembly");
             return;
         }
-
         var image = Mono.AssemblyGetImage(assembly);
+
         var interopClass = Mono.ClassFromName(image, "MelonLoader.InternalUtils", "BootstrapInterop");
+        if (interopClass == 0)
+        {
+            Core.Logger.Error("Managed did not return BootstrapInterop");
+            return;
+        }
 
         var initMethod = Mono.ClassGetMethodFromName(interopClass, "Initialize", 1);
-        Mono.ClassGetMethodFromName(interopClass, "Start", 0);
+        if (initMethod == 0)
+        {
+            Core.Logger.Error("Managed did not return BootstrapInterop.Initialize");
+            return;
+        }
 
         var assemblyManagerClass = Mono.ClassFromName(image, "MelonLoader.Resolver", "AssemblyManager");
+        if (assemblyManagerClass == 0)
+        {
+            Core.Logger.Error("Managed did not return AssemblyManager");
+            return;
+        }
 
         assemblyManagerSearchAssembly = Mono.ClassGetMethodFromName(assemblyManagerClass, "SearchAssembly", 5);
+        if (assemblyManagerSearchAssembly == 0)
+        {
+            Core.Logger.Error("Managed did not return AssemblyManager.SearchAssembly");
+            return;
+        }
 
         MelonDebug.Log("Invoking managed core init");
 
