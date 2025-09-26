@@ -4,7 +4,6 @@ using System.Runtime.InteropServices;
 
 #if NET6_0_OR_GREATER
 using MelonLoader.CoreClrUtils;
-using MelonLoader.InternalUtils;
 #endif
 
 namespace MelonLoader.InternalUtils;

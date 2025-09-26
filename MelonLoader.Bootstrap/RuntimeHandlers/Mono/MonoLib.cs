@@ -162,6 +162,8 @@ internal class MonoLib
 
             nint method = ClassGetMethodFromName(objClass, "ToString", 0);
             if (method == 0)
+                method = ClassGetMethodFromName(objClass, "GetHashCode", 0);
+            if (method == 0)
                 return null;
 
             var initArgs = stackalloc nint*[0];
