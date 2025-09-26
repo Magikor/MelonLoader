@@ -6,7 +6,7 @@ using HarmonyLib;
 
 namespace MelonLoader.Fixes.AsmResolver
 {
-    // Herp: This fixes an OOBE issue with AsmResolver Utf8String.Concat and using the wrong Length variable for byte array allocation
+    // Herp: This fixes an OOBE issue with AsmResolver Utf8String.Concat using the wrong Length variable for byte array allocation
     internal class AsmResolverUtf8StringConcatFix
     {
         private static MethodInfo _concat;

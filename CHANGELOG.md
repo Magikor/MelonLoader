@@ -77,7 +77,9 @@
 32. Fixed an issue with MelonCoroutines attempting to use the Support Module before it is loaded
 33. Fixed an issue with MelonCoroutines started from OnApplicationStart running before other MelonCoroutines in the queue
 34. Fixed an issue with Il2CppInterop's GenericMethod::GetMethod Hook causing crashes on some Unity Versions
-35. Fixed an issue with Il2CppInterop's MethodRewriteContext.UnmangleMethodNameWithSignature and it's usage of AsmResolver's Utf8String causing crashes on some Unity Versions
+35. Fixed an issue with AsmResolver's Utf8String.Concat using the wrong Length variable for byte array allocation
+36. Fixed an issue with Il2CppInterop's MethodRewriteContext.UnmangleMethodNameWithSignature not fully validating strings before passing them to Utf8String.Concat
+37. Fixed an issue with Mono Initialization not rethrowing exceptions to logging in some rare cases
 
 ---
 
