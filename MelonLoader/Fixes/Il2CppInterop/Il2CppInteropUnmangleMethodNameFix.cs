@@ -40,7 +40,7 @@ namespace MelonLoader.Fixes.Il2CppInterop
 
                 _unmangleMethodNameWithSignaturePrefix = thisType.GetMethod(nameof(UnmangleMethodNameWithSignaturePrefix), BindingFlags.NonPublic | BindingFlags.Static);
                 if (_unmangleMethodNameWithSignaturePrefix == null)
-                    throw new Exception("Failed to get AsmResolverUtf8StringConcatFix.UnmangleMethodNameWithSignaturePrefix");
+                    throw new Exception("Failed to get Il2CppInteropUnmangleMethodNameFix.UnmangleMethodNameWithSignaturePrefix");
 
                 MelonDebug.Msg($"Patching Il2CppInterop MethodRewriteContext.UnmangleMethodNameWithSignature...");
                 Core.HarmonyInstance.Patch(_unmangleMethodNameWithSignature,
