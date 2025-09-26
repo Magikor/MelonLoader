@@ -36,6 +36,7 @@
 * Fixed an issue with AsmResolver's Utf8String.Concat using the wrong Length variable for byte array allocation
 * Fixed an issue with Il2CppInterop's MethodRewriteContext.UnmangleMethodNameWithSignature not fully validating strings before passing them to Utf8String.Concat
 * Fixed an issue with Mono Initialization not rethrowing exceptions to logging in some rare cases
+* Implemented experimental MonoBleedingEdge Environment Patches behind Loader config option (Default is OFF)
 
 ## New Contributors
 * [Squaduck](<https://github.com/Squaduck>) made their first contribution in [#970](<https://github.com/LavaGang/MelonLoader/pull/970>)

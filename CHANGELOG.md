@@ -80,6 +80,7 @@
 35. Fixed an issue with AsmResolver's Utf8String.Concat using the wrong Length variable for byte array allocation
 36. Fixed an issue with Il2CppInterop's MethodRewriteContext.UnmangleMethodNameWithSignature not fully validating strings before passing them to Utf8String.Concat
 37. Fixed an issue with Mono Initialization not rethrowing exceptions to logging in some rare cases
+38. Implemented experimental MonoBleedingEdge Environment Patches behind Loader config option (Default is OFF)
 
 ---
 
