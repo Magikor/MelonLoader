@@ -103,8 +103,8 @@ namespace MelonLoader.Support
             if (scenemanager == null)
                 return;
 
-            sceneLoaded = scenemanager.GetMethod("Internal_SceneLoaded", BindingFlags.NonPublic | BindingFlags.Static);
-            sceneUnloaded = scenemanager.GetMethod("Internal_SceneUnloaded", BindingFlags.NonPublic | BindingFlags.Static);
+            sceneLoaded = scenemanager.GetMethod("Internal_SceneLoaded", BindingFlags.Public | BindingFlags.Static);
+            sceneUnloaded = scenemanager.GetMethod("Internal_SceneUnloaded", BindingFlags.Public | BindingFlags.Static);
         }
 
         private static IntPtr MacOsIl2CppInteropLibraryResolver(string libraryName, Assembly assembly, DllImportSearchPath? searchPath)
