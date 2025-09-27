@@ -82,6 +82,7 @@
 37. Fixed an issue with Mono Initialization not rethrowing exceptions to logging in some rare cases
 38. Implemented experimental MonoBleedingEdge Environment Patches behind Loader config option (Default is OFF)
 39. Fixed an issue with Harmony Auto-Patching for Plugins and Mods not gracefully failing
+40. Implemented Harmony TryPatchAll Extension to MelonUtils
 
 ---
 
