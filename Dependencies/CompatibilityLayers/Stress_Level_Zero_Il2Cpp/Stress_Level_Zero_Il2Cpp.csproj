@@ -8,7 +8,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\..\MelonLoader\MelonLoader.csproj">
+        <ProjectReference Include="$(SolutionDir)\MelonLoader\MelonLoader.csproj">
             <Private>false</Private>
             <CopyLocalSatelliteAssemblies>false</CopyLocalSatelliteAssemblies>
         </ProjectReference>

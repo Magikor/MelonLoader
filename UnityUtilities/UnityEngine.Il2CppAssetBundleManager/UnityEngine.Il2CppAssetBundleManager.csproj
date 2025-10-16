@@ -7,7 +7,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\MelonLoader\MelonLoader.csproj" Private="false" />
+        <ProjectReference Include="$(SolutionDir)\MelonLoader\MelonLoader.csproj" Private="false" />
         <PackageReference Include="Il2CppInterop.Runtime" Version="$(Il2CppInteropVersion)" Private="false">
           <ExcludeAssets>runtime</ExcludeAssets>
         </PackageReference>

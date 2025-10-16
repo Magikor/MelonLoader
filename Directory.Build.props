@@ -67,6 +67,10 @@
 	<!--
 		Platform Defaults
 	-->
+	<PropertyGroup Condition="'$(ForceRID)' != ''">
+		<RuntimeIdentifier>$(ForceRID)</RuntimeIdentifier>
+    </PropertyGroup>
+	
 	<PropertyGroup Condition="'$(RuntimeIdentifier)' == '' And '$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::Windows)))' == 'true'">
 		<RuntimeIdentifier>win-$(Platform)</RuntimeIdentifier>
     </PropertyGroup>

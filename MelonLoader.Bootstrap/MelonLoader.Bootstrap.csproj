@@ -38,8 +38,8 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <None Include="../BaseLibs/NetStandardPatches/*" CopyToOutputDirectory="PreserveNewest" Link="MelonLoader/Dependencies/NetStandardPatches/%(RecursiveDir)%(Filename)%(Extension)" />
-        <None Include="../BaseLibs/MonoBleedingEdgePatches/*" CopyToOutputDirectory="PreserveNewest" Link="MelonLoader/Dependencies/MonoBleedingEdgePatches/%(RecursiveDir)%(Filename)%(Extension)" />
+        <None Include="$(SolutionDir)/BaseLibs/NetStandardPatches/*" CopyToOutputDirectory="PreserveNewest" Link="MelonLoader/Dependencies/NetStandardPatches/%(RecursiveDir)%(Filename)%(Extension)" />
+        <None Include="$(SolutionDir)/BaseLibs/MonoBleedingEdgePatches/*" CopyToOutputDirectory="PreserveNewest" Link="MelonLoader/Dependencies/MonoBleedingEdgePatches/%(RecursiveDir)%(Filename)%(Extension)" />
         <None Include="$(SolutionDir)/NOTICE.txt" CopyToOutputDirectory="PreserveNewest" Link="MelonLoader/Documentation/%(Filename)%(Extension)" />
         <None Include="$(SolutionDir)/LICENSE.md" CopyToOutputDirectory="PreserveNewest" Link="MelonLoader/Documentation/%(Filename)%(Extension)" />
         <None Include="$(SolutionDir)/CHANGELOG.md" CopyToOutputDirectory="PreserveNewest" Link="MelonLoader/Documentation/%(Filename)%(Extension)" />
@@ -90,6 +90,6 @@
     <Target Name="PublishAsBuildAfterTarget" AfterTargets="Build" DependsOnTargets="Publish" />
 
     <Target Condition="'$(RuntimeIdentifier.StartsWith(`win-`))' == 'true'" Name="RenameBinary" AfterTargets="Build">
-        <Move SourceFiles="$(PublishDir)/$(TargetName).dll" DestinationFiles="$(PublishDir)/version.dll" />
+        <Move SourceFiles="$(MLOutDir)/$(TargetName).dll" DestinationFiles="$(MLOutDir)/version.dll" />
     </Target>
 </Project>

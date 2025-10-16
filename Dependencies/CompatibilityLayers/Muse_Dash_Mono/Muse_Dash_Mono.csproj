@@ -7,6 +7,6 @@
         <DebugType>portable</DebugType>
     </PropertyGroup>
     <ItemGroup>
-        <ProjectReference Include="..\..\..\MelonLoader\MelonLoader.csproj" Private="false" />
+        <ProjectReference Include="$(SolutionDir)\MelonLoader\MelonLoader.csproj" Private="false" />
     </ItemGroup>
 </Project>
