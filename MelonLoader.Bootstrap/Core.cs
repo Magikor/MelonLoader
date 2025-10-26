@@ -44,6 +44,6 @@ public static class Core
         if (!LoaderConfig.Current.Loader.CapturePlayerLogs)
             ConsoleHandler.NullHandles();
 
-        ModuleSymbolRedirect.ApplyHook();
+        ModuleSymbolRedirect.Attach();
     }
 }

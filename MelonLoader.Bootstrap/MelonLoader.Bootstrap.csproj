@@ -65,6 +65,7 @@
 
     <ItemGroup>
         <Compile Include="$(SolutionDir)/MelonLoader/LoaderConfig.cs" />
+        <Compile Include="..\MelonLoader\NativeUtils\NativeHooks.cs" Link="NativeHooks.cs" />
     </ItemGroup>
 
     <ItemGroup Condition="'$(RuntimeIdentifier.StartsWith(`osx-`))' == 'true'">
@@ -82,9 +83,7 @@
          appended. Our entrypoint on linux REQUIRES to expose "__libc_start_main" without any version suffix.
          To workaround this, we can remove the string in the file before linking, but after compile -->
     <Target Name="Replace" BeforeTargets="LinkNative" DependsOnTargets="IlcCompile">
-        <WriteLinesToFile File="$(ExportsFile)"
-                          Lines="$([System.IO.File]::ReadAllText($(ExportsFile)).Replace('V1.0',''))"
-                          Overwrite="true"/>
+        <WriteLinesToFile File="$(ExportsFile)" Lines="$([System.IO.File]::ReadAllText($(ExportsFile)).Replace('V1.0',''))" Overwrite="true" />
     </Target>
 
     <Target Name="PublishAsBuildAfterTarget" AfterTargets="Build" DependsOnTargets="Publish" />

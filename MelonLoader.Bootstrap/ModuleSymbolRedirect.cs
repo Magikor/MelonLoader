@@ -1,5 +1,6 @@
 ﻿using MelonLoader.Bootstrap.RuntimeHandlers.Il2Cpp;
 using MelonLoader.Bootstrap.RuntimeHandlers.Mono;
+using MelonLoader.Bootstrap.Utils;
 using System.Runtime.InteropServices;
 
 namespace MelonLoader.Bootstrap
@@ -17,34 +18,32 @@ namespace MelonLoader.Bootstrap
         private delegate nint DetourFn(nint handle, nint symbol);
         private static readonly DetourFn DetourDelegate = SymbolDetour;
 
-        internal static void ApplyHook()
+        private static PltNativeHook<DetourFn>? nativeHook;
+
+        internal static void Attach()
         {
             IntPtr detourPtr = Marshal.GetFunctionPointerForDelegate(DetourDelegate);
 
 #if LINUX || OSX
-            PltHook.InstallHooks
-            ([
-                ("dlsym", detourPtr)
-            ]);
+            nativeHook = PltNativeHook<DetourFn>.RedirectUnityPlayer("dlsym", detourPtr);
 #endif
 
 #if WINDOWS
-            PltHook.InstallHooks
-            ([
-                ("GetProcAddress", detourPtr)
-            ]);
+            nativeHook = PltNativeHook<DetourFn>.RedirectUnityPlayer("GetProcAddress", detourPtr);
 #endif
+
+            nativeHook?.Attach();
+        }
+
+        internal static void Detach()
+        {
+            nativeHook?.Detach();
+            nativeHook = null;
         }
 
         private static nint SymbolDetour(nint handle, nint symbol)
         {
-            // Herp: Using Prebuilt Interop classes for this caused weird crashing issues when attempting to marshal string to span
-            // This works around the issue by manually importing the appropriate original export into a delegate and then calling original using that instead
-#if WINDOWS
-            nint originalSymbolAddress = GetProcAddress(handle, symbol);
-#else
-            nint originalSymbolAddress = dlsym(handle, symbol);
-#endif
+            nint originalSymbolAddress = nativeHook?.Trampoline(handle, symbol) ?? 0;
 
             string? symbolName = Marshal.PtrToStringAnsi(symbol);
             if (string.IsNullOrEmpty(symbolName)
@@ -68,16 +67,5 @@ namespace MelonLoader.Bootstrap
             MelonDebug.Log($"Redirecting {symbolName}");
             return redirect.detourPtr;
         }
-
-#if WINDOWS
-        [DllImport("kernel32")]
-        private static extern nint GetProcAddress(nint handle, nint symbol);
-#elif LINUX
-        [DllImport("libdl.so.2")]
-        private static extern IntPtr dlsym(nint handle, nint symbol);
-#elif OSX
-        [DllImport("libSystem.B.dylib")]
-        private static extern IntPtr dlsym(nint handle, nint symbol);
-#endif
     }
 }
