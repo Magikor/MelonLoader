@@ -1,10 +1,11 @@
 #if LINUX || OSX
+using MelonLoader.Bootstrap.Utils;
 using System.Runtime.InteropServices;
 using System.Text;
 
 namespace MelonLoader.Bootstrap.Logging;
 
-internal static class LinuxPlayerLogsMirroring
+internal static class UnixPlayerLogsMirroring
 {
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
     private delegate nint Fopen64Fn(string pathnane, string mode);
@@ -28,35 +29,43 @@ internal static class LinuxPlayerLogsMirroring
     
     private static readonly StringBuilder LogBuffer = new(2048);
 
+    private static PltNativeHook<Fopen64Fn>? FopenNativeHook;
+    private static PltNativeHook<VfprintfFn>? VfprintfNativeHook;
+    private static PltNativeHook<VfprintfChkFn>? VfprintfChkNativeHook;
+    private static PltNativeHook<Dup2Fn>? Dup2NativeHook;
+
     internal static void SetupPlayerLogMirroring()
     {
-        PltHook.InstallHooks(
-        [
 #if OSX
-            ("fopen", Marshal.GetFunctionPointerForDelegate(HookFopen64Delegate)),
+        FopenNativeHook = PltNativeHook<Fopen64Fn>.RedirectUnityPlayer("fopen", Marshal.GetFunctionPointerForDelegate(HookFopen64Delegate));
 #else
-            ("fopen64", Marshal.GetFunctionPointerForDelegate(HookFopen64Delegate)),
+        FopenNativeHook = PltNativeHook<Fopen64Fn>.RedirectUnityPlayer("fopen64", Marshal.GetFunctionPointerForDelegate(HookFopen64Delegate));
 #endif
-            ("vfprintf", Marshal.GetFunctionPointerForDelegate(HookVfprintfDelegate)),
-            ("__vfprintf_chk", Marshal.GetFunctionPointerForDelegate(HookVfprintfChkDelegate)),
-            ("dup2", Marshal.GetFunctionPointerForDelegate(HookDup2Delegate))
-        ]);
+
+        VfprintfNativeHook = PltNativeHook<VfprintfFn>.RedirectUnityPlayer("vfprintf", Marshal.GetFunctionPointerForDelegate(HookVfprintfDelegate));
+        VfprintfChkNativeHook = PltNativeHook<VfprintfChkFn>.RedirectUnityPlayer("__vfprintf_chk", Marshal.GetFunctionPointerForDelegate(HookVfprintfDelegate));
+        Dup2NativeHook = PltNativeHook<Dup2Fn>.RedirectUnityPlayer("dup2", Marshal.GetFunctionPointerForDelegate(HookVfprintfDelegate));
+
+        FopenNativeHook?.Attach();
+        VfprintfNativeHook?.Attach();
+        VfprintfChkNativeHook?.Attach();
+        Dup2NativeHook?.Attach();
     }
 
     private static nint HookFopen64(string pathName, string mode)
     {
         if (_foundPlayerLogsStream)
-            return LibcNative.Fopen64(pathName, mode);
+            return FopenNativeHook?.Trampoline(pathName, mode) ?? 0;
 
         if (mode.Contains('w') && (pathName.EndsWith("Player.log") || pathName.EndsWith("output_log.txt")))
         {
-            _streamPlayerLogs = LibcNative.Fopen64(pathName, mode);
+            _streamPlayerLogs = FopenNativeHook?.Trampoline(pathName, mode) ?? 0;
             MelonDebug.Log($"Found player logs file with fd {LibcNative.Fileno(_streamPlayerLogs)} at: {pathName}");
 
             _foundPlayerLogsStream = true;
             return _streamPlayerLogs;
         }
-        return LibcNative.Fopen64(pathName, mode);
+        return FopenNativeHook?.Trampoline(pathName, mode) ?? 0;
     }
 
     private static int HookDup2(int oldFd, int newFd)
@@ -67,7 +76,7 @@ internal static class LinuxPlayerLogsMirroring
             return newFd;
         }
 
-        return LibcNative.Dup2(oldFd, newFd);
+        return Dup2NativeHook?.Trampoline(oldFd, newFd) ?? 0;
     }
 
     private static int HookVfprintfChk(nint stream, int flag, string format, nint vList)
@@ -98,7 +107,7 @@ internal static class LinuxPlayerLogsMirroring
             LibcNative.Fseek(stream, 0, LibcNative.SeekEnd);
             return LibcNative.Fwrite(bufferSpan, 1, nbrBytesToWrite, stream);
         }
-        return LibcNative.Vfprintf(stream, format, vList);
+        return VfprintfNativeHook?.Trampoline(stream, format, vList) ?? 0;
     }
 }
 #endif
