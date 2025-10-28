@@ -47,6 +47,9 @@
 * Rewrote Bootstrap PLTHooks to utilize NativeHook overrides
 * Reworked Bootstrap NativeFunc to avoid infinite looping resolves
 * Improved Handling of Compatibility Layers and Unity Version Parsing
+* Fixed an issue with Command-Line Parsing sometimes failing
+* Adjusted DotNet handling to initialize more reliably
+* Implemented DotNet HostFXR Path Override config and launch options --melonloader.hostfxr
 
 ## Contributors
 * [slxdy](<https://github.com/slxdy>) made a contribution in [#939](<https://github.com/LavaGang/MelonLoader/pull/939>)
@@ -55,5 +58,6 @@
 * [HAHOOS](<https://github.com/HAHOOS>) made a contribution in [#1041](<https://github.com/LavaGang/MelonLoader/pull/1041>)
 * [Squaduck](<https://github.com/Squaduck>) made their first contribution in [#970](<https://github.com/LavaGang/MelonLoader/pull/970>)
 * [Emik03](<https://github.com/Emik03>) made their first contribution in [#983](<https://github.com/LavaGang/MelonLoader/pull/983>)
+* [official-notfishvr](<https://github.com/official-notfishvr>) made their first contribution in [#1044](<https://github.com/LavaGang/MelonLoader/pull/1044>)
 
 **Full Changelog**: [CHANGELOG.md](<https://github.com/LavaGang/MelonLoader/blob/master/CHANGELOG.md>) | [v0.7.1...v0.7.2](<https://github.com/LavaGang/MelonLoader/compare/v0.7.1...v0.7.2>)

@@ -122,6 +122,10 @@ public class LoaderConfig
 
             if (ArgParser.IsDefined("melonloader.nosfmanifest"))
                 Current.Loader.DisableSubFolderManifest = true;
+
+            string? hostfxrPath = ArgParser.GetValue("melonloader.hostfxr");
+            if (hostfxrPath != null)
+                Current.Loader.HostFXRPathOverride = hostfxrPath;
         }
 #endif
 
@@ -171,6 +175,10 @@ public class LoaderConfig
         [TomlProperty("disable_subfolder_manifest")]
         [TomlPrecedingComment("Disables the requirement of needing a manifest json inside a Melon Subfolder for it to be loaded. Equivalent to the '--melonloader.nosfmanifest' launch option")]
         public bool DisableSubFolderManifest { get; internal set; }
+
+        [TomlProperty("hostfxr_path_override")]
+        [TomlPrecedingComment("Manually defines the HostFXR path to use for DotNet Initialization. Equivalent to the '--melonloader.hostfxr' launch option")]
+        public string HostFXRPathOverride { get; internal set; } = "";
 
         public enum LoaderTheme
         {

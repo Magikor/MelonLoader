@@ -91,6 +91,9 @@
 46. Rewrote Bootstrap PLTHooks to utilize NativeHook overrides
 47. Reworked Bootstrap NativeFunc to avoid infinite looping resolves
 48. Improved Handling of Compatibility Layers and Unity Version Parsing
+49. Fixed an issue with Command-Line Parsing sometimes failing   (Credits to [official-notfishvr](https://github.com/official-notfishvr) :D)
+50. Adjusted DotNet handling to initialize more reliably
+51. Implemented DotNet HostFXR Path Override config and launch options --melonloader.hostfxr
 
 ---
 
