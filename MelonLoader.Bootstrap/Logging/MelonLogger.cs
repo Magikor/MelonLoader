@@ -171,8 +171,8 @@ internal static class MelonLogger
     {
         var sectionPart = string.IsNullOrEmpty(sectionName.ToString()) ? "" : $"[{sectionName}] ";
         var time = DateTime.Now.ToString(timeFormat);
-      
-        LogToFiles($"[{time}] [{sectionName}] {strippedMessage}");
+
+        LogToFiles($"[{time}] {sectionPart}{strippedMessage}");
 
         if (!ConsoleHandler.IsOpen)
             return;
