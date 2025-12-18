@@ -114,7 +114,7 @@ internal static class MelonLogger
         if (LoaderConfig.Current.Loader.CapturePlayerLogs)
         {
 #if LINUX || OSX
-            LinuxPlayerLogsMirroring.SetupPlayerLogMirroring();
+            UnixPlayerLogsMirroring.SetupPlayerLogMirroring();
 #endif
 #if WINDOWS
             WindowsPlayerLogsMirroring.SetupPlayerLogMirroring();
@@ -137,11 +137,11 @@ internal static class MelonLogger
         }
     }
 
-    public static void Log(ColorARGB msgColor, ReadOnlySpan<char> msg)
+    public static void Log(ColorARGB msgColor, ReadOnlySpan<char> msg, ReadOnlySpan<char> strippedMessage)
     {
         var time = DateTime.Now.ToString(timeFormat);
 
-        LogToFiles($"[{time}] {msg}");
+        LogToFiles($"[{time}] {strippedMessage}");
 
         if (!ConsoleHandler.IsOpen)
             return;
@@ -166,12 +166,13 @@ internal static class MelonLogger
         Console.WriteLine($"[{time.Pastel(timeColor)}] {msg.Pastel(msgColor)}");
     }
 
-    public static void Log(ColorARGB msgColor, ReadOnlySpan<char> msg, ColorARGB sectionColor, ReadOnlySpan<char> sectionName)
+    // HACK: There's definitely a better way to implement MsgPastel, but for now this will do. This required the strippedMessage parameter to be provided which isn't really optimal
+    public static void Log(ColorARGB msgColor, ReadOnlySpan<char> msg, ColorARGB sectionColor, ReadOnlySpan<char> sectionName, ReadOnlySpan<char> strippedMessage)
     {
         var sectionPart = string.IsNullOrEmpty(sectionName.ToString()) ? "" : $"[{sectionName}] ";
         var time = DateTime.Now.ToString(timeFormat);
-        
-        LogToFiles($"[{time}] {sectionPart}{msg}");
+      
+        LogToFiles($"[{time}] [{sectionName}] {strippedMessage}");
 
         if (!ConsoleHandler.IsOpen)
             return;
@@ -221,7 +222,7 @@ internal static class MelonLogger
             return;
         }
 
-        Log(ColorARGB.Yellow, msg);
+        Log(ColorARGB.Yellow, msg, msg);
     }
 
     public static void LogWarning(ReadOnlySpan<char> msg, ReadOnlySpan<char> sectionName)
@@ -236,7 +237,7 @@ internal static class MelonLogger
             return;
         }
 
-        Log(ColorARGB.Yellow, msg, ColorARGB.Yellow, sectionName);
+        Log(ColorARGB.Yellow, msg, ColorARGB.Yellow, sectionName, msg);
     }
 
     public static void LogError(ReadOnlySpan<char> msg)
