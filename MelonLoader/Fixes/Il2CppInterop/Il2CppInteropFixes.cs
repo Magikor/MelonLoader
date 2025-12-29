@@ -71,8 +71,6 @@ namespace MelonLoader.Fixes.Il2CppInterop
         private static MethodInfo _garbageCollector_RunFinalizer_FindTargetMethod_Prefix;
         
         public static Type InjectorHelpersType { get; private set; }
-        public static MethodInfo GetIl2CppExport { get; private set; }
-        public static ProcessModule Il2CppModule { get; private set; }
         public static MethodInfo DecoderForAddress { get; private set; }
         public static MethodInfo ExtractTargetAddress { get; private set; }
 
@@ -169,8 +167,6 @@ namespace MelonLoader.Fixes.Il2CppInterop
                     throw new Exception("Failed to get GarbageCollector.RunFinalizer.FindTargetMethod");
 
                 
-                GetIl2CppExport = InjectorHelpersType.GetMethod("GetIl2CppExport",  BindingFlags.NonPublic | BindingFlags.Static);
-                Il2CppModule = (ProcessModule)InjectorHelpersType.GetField("Il2CppModule", BindingFlags.NonPublic | BindingFlags.Static)?.GetValue(null);
                 DecoderForAddress = typeof(XrefScanner).GetMethod("DecoderForAddress", BindingFlags.NonPublic | BindingFlags.Static);
                 ExtractTargetAddress = typeof(XrefScanner).GetMethod("ExtractTargetAddress", BindingFlags.NonPublic | BindingFlags.Static);
 
@@ -643,17 +639,18 @@ namespace MelonLoader.Fixes.Il2CppInterop
 
         private static bool GarbageCollector_RunFinalizer_FindTargetMethod_Prefix(ref IntPtr __result)
         {
-            var unhandledException = (IntPtr)GetIl2CppExport.Invoke(null, new object[] { nameof(IL2CPP.il2cpp_unhandled_exception) })!;
+            var getIl2cppExportMethod = InjectorHelpersType.GetMethod("GetIl2CppExport",  BindingFlags.NonPublic | BindingFlags.Static);
+            var unhandledException = (IntPtr)getIl2cppExportMethod.Invoke(null, new object[] { nameof(IL2CPP.il2cpp_unhandled_exception) })!;
             var actualUnhandled = XrefScannerLowLevel.JumpTargets(unhandledException).FirstOrDefault();
             if (actualUnhandled == IntPtr.Zero)
                 actualUnhandled = unhandledException;
 
             MelonDebug.Msg($"Runtime::UnhandledException: 0x{actualUnhandled.ToInt64():X}");
-
+            var il2CppModule = (ProcessModule)InjectorHelpersType.GetField("Il2CppModule", BindingFlags.NonPublic | BindingFlags.Static)?.GetValue(null);
             var callers = FindCallersOf(
                 actualUnhandled,
-                Il2CppModule.BaseAddress,
-                Il2CppModule.ModuleMemorySize
+                il2CppModule.BaseAddress,
+                il2CppModule.ModuleMemorySize
             ).ToList();
 
             MelonDebug.Msg($"Found {callers.Count} callers of UnhandledException");
@@ -741,7 +738,8 @@ namespace MelonLoader.Fixes.Il2CppInterop
 
         private static IntPtr FindRuntimeInvoke()
         {
-            IntPtr export = (IntPtr)GetIl2CppExport.Invoke(null, new object?[] { nameof(IL2CPP.il2cpp_runtime_invoke) })!;
+            var getIl2cppExportMethod = InjectorHelpersType.GetMethod("GetIl2CppExport",  BindingFlags.NonPublic | BindingFlags.Static);
+            IntPtr export = (IntPtr)getIl2cppExportMethod.Invoke(null, new object?[] { nameof(IL2CPP.il2cpp_runtime_invoke) })!;
             if (export == IntPtr.Zero) return IntPtr.Zero;
 
             var target = XrefScannerLowLevel.JumpTargets(export).FirstOrDefault();
