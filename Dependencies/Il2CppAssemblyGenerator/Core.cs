@@ -164,7 +164,21 @@ namespace MelonLoader.Il2CppAssemblyGenerator
                 if (File.Exists(newfilepath))
                     File.Delete(newfilepath);
                 Directory.CreateDirectory(il2CppAssembliesDirectory);
-                File.Move(filepath, newfilepath);
+                
+                // Retry logic for file move with delays to handle locked files
+                int maxRetries = 5;
+                for (int retry = 0; retry < maxRetries; retry++)
+                {
+                    try
+                    {
+                        File.Move(filepath, newfilepath);
+                        break;
+                    }
+                    catch (System.IO.IOException) when (retry < maxRetries - 1)
+                    {
+                        System.Threading.Thread.Sleep(500 + (retry * 100));
+                    }
+                }
             }
             Config.Save();
         }
